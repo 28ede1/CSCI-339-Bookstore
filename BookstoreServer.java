@@ -22,8 +22,12 @@ public class BookstoreServer {
         return database.Lookup(item_number);
     }
 
+    public boolean Buy(int item_number) {
+        return database.Buy(item_number);
+    }
+
     /*
-        Add remaining 5 methods.
+        Add remaining 3 methods.
     */
 
     public static void main (String [] args) {

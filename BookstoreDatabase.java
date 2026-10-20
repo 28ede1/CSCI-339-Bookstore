@@ -19,7 +19,7 @@ public class BookstoreDatabase {
    public ArrayList<Map<String, Object>> Search(String topic) {
         Connection c = null;
         Statement stmt = null;
-        String query = "SELECT * FROM BOOK WHERE TOPIC = '" + topic + "'";
+        String query = "SELECT * FROM BOOKS WHERE TOPIC = '" + topic + "'";
         ArrayList<Map<String, Object>> books = new ArrayList<>();
 
         try {
@@ -57,7 +57,7 @@ public class BookstoreDatabase {
    public Map<String, Object> Lookup(int item_number) {
         Connection c = null;
         Statement stmt = null;
-        String query = "SELECT * FROM BOOK WHERE ID = '" + item_number + "'";
+        String query = "SELECT * FROM BOOKS WHERE ID = '" + item_number + "'";
         Map<String, Object> book = new HashMap<>();
 
         try {
@@ -97,7 +97,58 @@ public class BookstoreDatabase {
         * Should also update the log of purchases.
     */
    public boolean Buy(int item_number) {
-    return false;
+        Connection c = null;
+        Statement stmt = null;
+        
+
+        // written with one query statement rather than having to subtract stock THEN check if out of stock, or check if out of stock then subtract
+        String update_query = "UPDATE BOOKS SET STOCK = STOCK - 1 WHERE ID = " + item_number + " AND STOCK > 0";
+        String lookup_query = "SELECT TITLE FROM BOOKS WHERE ID = " + item_number;
+        boolean is_updated = false;
+
+        try {
+            c = DriverManager.getConnection(databaseUrl);
+            c.setAutoCommit(false);
+            stmt = c.createStatement();
+            int row_updated = stmt.executeUpdate( update_query );
+
+            if (row_updated == 1) {
+
+                ResultSet rs = stmt.executeQuery(lookup_query);
+
+                if (!rs.next()) { 
+                    throw new SQLException("Book not found during stock update.");
+                }
+
+                String title = rs.getString("TITLE");
+                rs.close();
+
+                String purchase_query = "INSERT INTO PURCHASES (BOOK_ID, TITLE) VALUES (" + item_number + ", '" + title + "')";
+                stmt.executeUpdate(purchase_query);
+
+                is_updated = true;
+
+            }
+
+            c.commit();
+            stmt.close();
+            c.close();
+
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+
+            // undo changes if the purchase failed.
+            if (c != null) {
+                try {
+                    c.rollback();
+                } catch (SQLException rollbackError) {
+                    System.err.println(rollbackError.getMessage());
+                }
+            }
+
+            throw new RuntimeException("Could not update book.", e);
+        }
+        return is_updated;
    }
 
     /**

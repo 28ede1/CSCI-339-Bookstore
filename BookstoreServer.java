@@ -18,6 +18,10 @@ public class BookstoreServer {
         return database.Search(topic);
     }
 
+    public Map<String, Object> Lookup(int item_number) {
+        return database.Lookup(item_number);
+    }
+
     /*
         Add remaining 5 methods.
     */

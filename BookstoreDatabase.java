@@ -19,7 +19,7 @@ public class BookstoreDatabase {
    public ArrayList<Map<String, Object>> Search(String topic) {
         Connection c = null;
         Statement stmt = null;
-        String query = "SELECT * FROM BOOKT WHERE TOPIC = '" + topic + "'";
+        String query = "SELECT * FROM BOOK WHERE TOPIC = '" + topic + "'";
         ArrayList<Map<String, Object>> books = new ArrayList<>();
 
         try {
@@ -55,7 +55,37 @@ public class BookstoreDatabase {
         * (stock count is greater than 0)
     */
    public Map<String, Object> Lookup(int item_number) {
-    return null;
+        Connection c = null;
+        Statement stmt = null;
+        String query = "SELECT * FROM BOOK WHERE ID = '" + item_number + "'";
+        Map<String, Object> book = new HashMap<>();
+
+        try {
+            c = DriverManager.getConnection(databaseUrl);
+            stmt = c.createStatement();
+            ResultSet rs = stmt.executeQuery( query );
+
+            if (rs.next()) {
+                String title = rs.getString("title");
+                double price = rs.getDouble("price");
+                String topic = rs.getString("topic");
+                boolean in_stock = rs.getInt("stock") > 0;
+
+                book.put("title", title);
+                book.put("price", price);
+                book.put("topic", topic);
+                book.put("in_stock", in_stock);
+            }
+
+            rs.close();
+            stmt.close();
+            c.close();
+
+        } catch  ( Exception e ) {
+            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+            throw new RuntimeException("Could not find for book.", e);
+        }
+        return book;
    }
 
     /**

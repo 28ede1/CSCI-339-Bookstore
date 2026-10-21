@@ -16,7 +16,7 @@ public class BookstoreDatabase {
     * 
     * Given a topic, return a list of maps containing integer "id" and string "title" of a book.
     */
-   public ArrayList<Map<String, Object>> Search(String topic) {
+   public ArrayList<Map<String, Object>> FindMany(String topic) {
         Connection c = null;
         Statement stmt = null;
         String query = "SELECT * FROM BOOKS WHERE TOPIC = '" + topic + "'";
@@ -54,7 +54,7 @@ public class BookstoreDatabase {
         * float cost of the book, string "topic", and a boolean of whether the item is still in stock
         * (stock count is greater than 0)
     */
-   public Map<String, Object> Lookup(int item_number) {
+   public Map<String, Object> FindOne(int item_number) {
         Connection c = null;
         Statement stmt = null;
         String query = "SELECT * FROM BOOKS WHERE ID = '" + item_number + "'";
@@ -96,7 +96,7 @@ public class BookstoreDatabase {
         * Does not allow negative stock amounts. Assume desired quantity is always 1.
         * Should also update the log of purchases.
     */
-   public boolean Buy(int item_number) {
+   public boolean DecrementStock(int item_number) {
         Connection c = null;
         Statement stmt = null;
         

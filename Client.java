@@ -7,6 +7,62 @@ import java.util.*;
 import java.net.URI;
 
 public class Client {
+
+    public static void Search(XmlRpcClient client, String topic) throws XmlRpcException {
+        ArrayList<Map<String, Object>> books = new ArrayList<>();
+
+        Vector<Object> params = new Vector<Object>();
+        params.addElement(topic);
+        Object[] result = (Object[])client.execute("bookstore.Search", params.toArray());
+
+        if (result.length == 0) {
+            System.out.println("No books found for that topic.");
+        }
+        else {
+            for (Object book : result) {
+                books.add((Map<String, Object>) book);
+            }
+        }
+        System.out.println(books);
+    }
+
+    public static void Lookup(XmlRpcClient client, int item_number) throws XmlRpcException {
+        Map<String, Object> book = new HashMap<>();
+
+        Vector<Object> params = new Vector<Object>();
+        params.addElement(item_number);
+        Map<String, Object> result = (Map<String, Object>) client.execute(
+            "bookstore.Lookup", params.toArray()
+        );
+
+        if (result.isEmpty()) {
+            System.out.println("No book found for that id.");
+        }
+        else {
+           book = result;
+        }
+
+        System.out.println(book);
+    }
+
+    public static void Buy(XmlRpcClient client, int item_number) throws XmlRpcException {
+        Map<String, Object> book = new HashMap<>();
+
+        Vector<Object> params = new Vector<Object>();
+        params.addElement(item_number);
+        boolean result = (boolean) client.execute(
+            "bookstore.Buy", params.toArray()
+        );
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("purchased", result);
+        response.put("message", result
+            ? "Bought book " + item_number
+            : "Could not complete purchase. May be out of stock.");
+
+        System.out.println(response);    
+    }
+
     public static void main (String [] args) {
 	if(args.length == 0) {
 	    System.out.println("Usage: java Client <server>");
@@ -23,58 +79,14 @@ public class Client {
 	    System.err.println("Client error: "+ e);
 	}
 
-    /*
-        IN PROGRESS:
-        
-        As of right now, clients can request searching for books by topic.
-
-        Eventually, allow users to enter any command line input like java Client localhost search
-        to call a specific method from the server.
-    */
-
-    Vector<Object> params = new Vector<Object>();
-    params.addElement("college life");
-
-    Vector<Object> params2 = new Vector<Object>();
-    params2.addElement(3);
-
-    Vector<Object> params3 = new Vector<Object>();
-    params3.addElement(486);
-
-
     try {
-        Object[] result = (Object[])client.execute("bookstore.Search", params.toArray());
+        Search(client, "college life");
+        Lookup(client, 53477);
+        Buy(client, 53477);
 
-        Map<?, ?> result2 = (Map<?, ?>) client.execute(
-            "bookstore.Lookup", params2.toArray()
-        );
-
-        boolean result3 = (boolean) client.execute(
-            "bookstore.Buy", params3.toArray()
-        );
-
-        if (result.length == 0) {
-            System.out.println("No books found for that topic.");
-        }
-        else {
-            for (Object book : result) {
-                System.out.println(book);
-            }
-        }
-
-        if (result2.isEmpty()) {
-            System.out.println("No book found for that id.");
-        }
-        else {
-            System.out.println(result2);
-        }
-
-        if (!result3) {
-            System.out.println("Could not complete purchase. May be out of stock.");
-        }
-        else {
-            System.out.println("Successfully purchased.");
-        }
+        /* 
+            call the remaining 3 methods here.
+        */
 
     } catch (Exception e) {
         System.err.println("Client error: " + e);

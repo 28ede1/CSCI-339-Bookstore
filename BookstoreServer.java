@@ -15,15 +15,15 @@ public class BookstoreServer {
     private BookstoreDatabase database = new BookstoreDatabase();
 
     public ArrayList<Map<String, Object>> Search(String topic) {
-        return database.Search(topic);
+        return database.FindMany(topic);
     }
 
     public Map<String, Object> Lookup(int item_number) {
-        return database.Lookup(item_number);
+        return database.FindOne(item_number);
     }
 
     public boolean Buy(int item_number) {
-        return database.Buy(item_number);
+        return database.DecrementStock(item_number);
     }
 
     /*

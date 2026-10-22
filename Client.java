@@ -88,6 +88,9 @@ public class Client {
             call the remaining 3 methods here.
         */
 
+	Update(client, 53477, 19.99);
+	Restock(client);
+	Log(client);
     } catch (Exception e) {
         System.err.println("Client error: " + e);
     }

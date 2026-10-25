@@ -72,7 +72,7 @@ public class Client {
         XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
         XmlRpcClient client=null;
         try {
-            config.setServerURL( URI.create("http://" + args[0] + ":8888").toURL() );
+            config.setServerURL( URI.create("http://" + args[0] + ":8889").toURL() );
             client = new XmlRpcClient();
             client.setConfig(config);
         } catch (Exception e) {

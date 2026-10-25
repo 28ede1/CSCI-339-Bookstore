@@ -1,6 +1,6 @@
 import xmlrpc.client, sys
 
-name = "http://"+sys.argv[1]+":8888"
+name = "http://"+sys.argv[1]+":8889"
 
 server = xmlrpc.client.ServerProxy(name)
 

@@ -48,17 +48,17 @@ public class BookstoreServer {
             PropertyHandlerMapping phm = new PropertyHandlerMapping();
             XmlRpcServer xmlRpcServer;
 
-            // Creates a web server configured to port 8888
-            // Tells lab machine OS to accept all incoming connections on port 8888
-	        WebServer server = new WebServer(8888);
+            // Creates a web server configured to port 8889
+            // Tells lab machine OS to accept all incoming connections on port 8889
+	        WebServer server = new WebServer(8889);
             xmlRpcServer = server.getXmlRpcServer();
 
             // map requests starting with "sample." to the requested method in Server class (so sample.SumAndDifference refers to SumAndDifference"
             phm.addHandler("bookstore", BookstoreServer.class);
             xmlRpcServer.setHandlerMapping(phm);
-	        System.out.println("Server starting on port 8888");
+	        System.out.println("Server starting on port 8889");
 
-            //Tells lab machine OS to accept all incoming connections on port 8888
+            //Tells lab machine OS to accept all incoming connections on port 8889
             server.start();
 
             System.out.println("TESTING, Log()");

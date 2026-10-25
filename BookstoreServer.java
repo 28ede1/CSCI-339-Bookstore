@@ -29,7 +29,15 @@ public class BookstoreServer {
     /*
         Add remaining 3 methods.
     */
-
+    public void Log() {
+	database.Log(); 
+}
+    public void Restock() {
+   	database.Restock(); 
+}
+    public boolean Update(int item_number, float price){
+	return datatbase.Update(item_number, price); 
+}
     public static void main (String [] args) {
         try {
 

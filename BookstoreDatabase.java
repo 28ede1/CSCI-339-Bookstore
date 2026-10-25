@@ -158,24 +158,39 @@ public class BookstoreDatabase {
         * Accesses purchases from the "Purchase" table rather than the "Book" table.
     */
    public void Log() {
-	try (Connection c = null;
-	    Statement stmt = c.createStatement();
-	    ResultSet rs = stmt.executeQuery("SELECT * FROM PURCHASES")){
-	   ResultSetMetaData md = rs.getMetaData();
-	   int cols = md.getColumnCount(); 
-	   while (rs.next()){
-		StringBuilder line = new StringBuilder();
-		for (int i = 1; i <= cols; i++){
-			if (i > 1) line.append(" | ");
-			line.append(md.getColumnName(i)).append("=").append(rs.getString(i));
-		}
-		System.out.println(line);
-	   }
-	}catch (Exception e){
-	   System.err.println(e.getClass().getName() + ": " + e.getMessage());
-	   throw new RuntimeException("Could not read purchase log.", e);
-}			
-    return;
+        Connection c = null;
+        Statement stmt = null;
+
+        String retrieve_query = "SELECT * FROM PURCHASES";
+
+        try 
+            {
+            c = DriverManager.getConnection(databaseUrl);
+            stmt = c.createStatement();
+            
+            ResultSet rs = stmt.executeQuery(retrieve_query);
+
+            // allows you to index md to get column name
+            ResultSetMetaData md = rs.getMetaData();
+            int cols = md.getColumnCount(); 
+
+            while ( rs.next() ) {
+                StringBuilder line = new StringBuilder();
+                for ( int i = 1; i <= cols; i++ ) {
+                    if (i > 1) {
+                        line.append(" | ");
+                    } 
+
+                    line.append(md.getColumnName(i)).append("=").append(rs.getString(i));
+                }
+
+                System.out.println(line);
+            }
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
+            throw new RuntimeException("Could not read purchase log.", e);
+        }			
+        return;
    }
 
     /**
@@ -184,15 +199,21 @@ public class BookstoreDatabase {
         * Updates stocks for each book by some set amount.
     */
    public void Restock() {
-	try (Connection c = null; 
-		PreparedStatement ps = c.prepareStatement("UPDATE BOOKS SET STOCK = STOCK + ?")) {
-			ps.setInt(1, RESTOCK_AMOUNT);
-			ps.executeUpdate();
-	}catch (Exception e){
-	   System.err.println(e.getClass().getName() + ": " + e.getMessage()); 
-	   throw new RuntimeException("Could not restock books." , e); 
-}
-	return;
+        Connection c = null;
+        PreparedStatement ps = null;
+        int restock_amt = 50;
+
+        try {
+            c = DriverManager.getConnection(databaseUrl);
+            ps = c.prepareStatement("UPDATE BOOKS SET STOCK = STOCK + ?"); 
+            ps.setInt(1, restock_amt );
+            ps.executeUpdate();
+            System.out.println("Successfully Restocked " + restock_amt + " books.");
+        } catch (Exception e){
+            System.err.println(e.getClass().getName() + ": " + e.getMessage()); 
+            throw new RuntimeException("Could not restock books." , e); 
+        }
+        return;
    }
 
     /**
@@ -200,19 +221,19 @@ public class BookstoreDatabase {
         * 
         * Given a int "item_number" and float "price", updates the price
     */
-   public boolean Update(int item_number, float price) {
-	boolean updated = false; 
+//    public boolean Update(int item_number, float price) {
+// 	boolean updated = false; 
 	
-	try (Connection c = null; 
-	    PreparedStatement ps = c.prepareStatement("UPDATE BOOKS SET PRICE =  WHERE ID = ?")) {
-            ps.setDouble(1, price);
-	    ps.setInt(2, item_number); 
-	    updated = ps.executeUpdate() == 1;
-        }catch (Exception e){
-           System.err.println(e.getClass().getName() + ": " + e.getMessage()); 
-           throw new RuntimeException("Could not update books." , e); 
-}
-   return updated;
-}
+// 	try (Connection c = null; 
+// 	    PreparedStatement ps = c.prepareStatement("UPDATE BOOKS SET PRICE =  WHERE ID = ?")) {
+//             ps.setDouble(1, price);
+// 	    ps.setInt(2, item_number); 
+// 	    updated = ps.executeUpdate() == 1;
+//         }catch (Exception e){
+//            System.err.println(e.getClass().getName() + ": " + e.getMessage()); 
+//            throw new RuntimeException("Could not update books." , e); 
+//     }
+//         return updated;
+//     }
 }
  

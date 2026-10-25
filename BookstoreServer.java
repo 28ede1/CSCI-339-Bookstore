@@ -12,7 +12,7 @@ import java.util.*;
 
 public class BookstoreServer { 
     
-    private BookstoreDatabase database = new BookstoreDatabase();
+    private static BookstoreDatabase database = new BookstoreDatabase();
 
     public ArrayList<Map<String, Object>> Search(String topic) {
         return database.FindMany(topic);
@@ -29,15 +29,15 @@ public class BookstoreServer {
     /*
         Add remaining 3 methods.
     */
-    public void Log() {
-	database.Log(); 
-}
-    public void Restock() {
-   	database.Restock(); 
-}
-    public boolean Update(int item_number, float price){
-	return datatbase.Update(item_number, price); 
-}
+    public static void Log() {
+	    database.Log(); 
+    }
+    public static void Restock() {
+   	    database.Restock(); 
+    }
+//     public boolean Update(int item_number, float price){
+// 	return datatbase.Update(item_number, price); 
+// }
     public static void main (String [] args) {
         try {
 
@@ -60,6 +60,12 @@ public class BookstoreServer {
 
             //Tells lab machine OS to accept all incoming connections on port 8888
             server.start();
+
+            System.out.println("TESTING, Log()");
+            Log();
+
+            System.out.println("TESTING, Restock()");
+            Restock();
 	    } catch (Exception exception) {
             System.err.println("Server: " + exception);
 	    }

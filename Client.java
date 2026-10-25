@@ -63,6 +63,10 @@ public class Client {
         System.out.println(response);    
     }
 
+    public static void Log(XmlRpcClient client) throws XmlRpcException {
+        client.execute("bookstore.Log", new Object[0]);
+    }
+
     public static void main (String [] args) {
 	if(args.length == 0) {
 	    System.out.println("Usage: java Client <server>");
@@ -80,17 +84,20 @@ public class Client {
 	}
 
     try {
+        System.out.println("TESTING, Search()");
         Search(client, "college life");
+
+        System.out.println("TESTING, Lookup()");
         Lookup(client, 53477);
+
+        System.out.println("TESTING, Buy()");
         Buy(client, 53477);
 
         /* 
             call the remaining 3 methods here.
         */
 
-	Update(client, 53477, 19.99);
-	Restock(client);
-	Log(client);
+	// Update(client, 53477, 19.99);
     } catch (Exception e) {
         System.err.println("Client error: " + e);
     }

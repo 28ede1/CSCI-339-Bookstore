@@ -35,9 +35,9 @@ public class BookstoreServer {
     public static void Restock() {
    	    database.Restock(); 
     }
-//     public boolean Update(int item_number, float price){
-// 	return datatbase.Update(item_number, price); 
-// }
+    public static boolean Update(int item_number, double price){
+	    return database.Update(item_number, price); 
+    }
     public static void main (String [] args) {
         try {
 
@@ -66,6 +66,10 @@ public class BookstoreServer {
 
             System.out.println("TESTING, Restock()");
             Restock();
+
+            System.out.println("TESTING, Update()");
+            Update(53477, 67.99);
+
 	    } catch (Exception exception) {
             System.err.println("Server: " + exception);
 	    }

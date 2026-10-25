@@ -221,19 +221,25 @@ public class BookstoreDatabase {
         * 
         * Given a int "item_number" and float "price", updates the price
     */
-//    public boolean Update(int item_number, float price) {
-// 	boolean updated = false; 
-	
-// 	try (Connection c = null; 
-// 	    PreparedStatement ps = c.prepareStatement("UPDATE BOOKS SET PRICE =  WHERE ID = ?")) {
-//             ps.setDouble(1, price);
-// 	    ps.setInt(2, item_number); 
-// 	    updated = ps.executeUpdate() == 1;
-//         }catch (Exception e){
-//            System.err.println(e.getClass().getName() + ": " + e.getMessage()); 
-//            throw new RuntimeException("Could not update books." , e); 
-//     }
-//         return updated;
-//     }
+   public boolean Update(int item_number, double price) {
+        Connection c = null;
+        PreparedStatement ps = null;
+
+        String update_query = "UPDATE BOOKS SET PRICE = ? WHERE ID = ?";
+        boolean updated = false; 
+        
+        
+        try {
+            c = DriverManager.getConnection(databaseUrl);
+            ps = c.prepareStatement(update_query); 
+            ps.setDouble(1, price);
+            ps.setInt(2, item_number); 
+            updated = ps.executeUpdate() == 1;
+        } catch (Exception e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage()); 
+            throw new RuntimeException("Could not update books." , e); 
+        }
+            return updated;
+    }
 }
  
